@@ -22,7 +22,7 @@ do
 	then
 		newFile=$newFile$line,$input$NEWLINE
 	else 
-		newFile=$newFile$line$NEWLINE #user data, don't change, just append
+		newFile=$newFile$line,0$NEWLINE #user data add a 0 for that score
 	fi 
 
 	lineNumber=$((lineNumber+1)) #increment lineNumber
