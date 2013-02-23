@@ -1,0 +1,8 @@
+fstrain: Fiona Strain
+zhangka: Kaiyu Zhang
+
+
+
+SCRIPTS__________
+addStudent: takes as input (pennkey, lastname, firstname) to add a new student to the csv
+rmStudent: takes as input a pennkey and removes the student from the csv file, if the student exists

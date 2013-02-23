@@ -8,7 +8,7 @@ gradeNum=-3
 #this section counts the number of "grades" that exist in the class
 for line in $(cat students.csv)
 do
-	IFS=$OLDIFS	
+	IFS=,	
 	for i in $line
 	do
 		#echo $i
@@ -19,7 +19,7 @@ done
 
 extraUser=$1,$2,$3
 i=0
-
+IFS=$OLDIFS
 #add the appropriate number of zeros (0) for the new student
 while [ $((i)) -ne $((gradeNum)) ]
 do
@@ -28,6 +28,6 @@ do
 done
 
 #finally add to the end of the file
-echo $extraUser >> students.csv
+echo -e $extraUser >> students.csv
 
 

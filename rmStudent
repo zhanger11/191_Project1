@@ -1,0 +1,69 @@
+#!/bin/sh
+
+user=$1
+
+NEWLINE="\n"
+
+echo yo fo shizzle fo sho want to remove $user "Y or N"?
+read input
+
+#if no, then just exit
+if [ $input = N ]
+then
+	exit
+fi
+if [ $input = n ]
+then
+	exit
+fi
+if [ $input = NO ]
+then
+	exit
+fi
+if [ $input = no ]
+then
+	exit
+fi
+if [ $input = No ]
+then
+	exit
+fi
+
+
+OLDIFS=$IFS
+IFS="
+"
+
+newFile=
+found=no
+deleted=no
+for line in $(cat students.csv)
+do
+	IFS=,
+	found=no
+	for i in $line #go through each word of each line
+	do
+		if [ $i = $user ] #if this line corresponds to the pennkey user
+		then
+			found=yes	
+			deleted=yes
+		fi
+		break #should only be searching the first word in a line
+	done
+
+	IFS="
+	"
+
+	if [ $found = no ] #if this line is not the user's line, then append it
+	then 
+		newFile="$newFile$line${NEWLINE}" #otherwise add it
+	fi
+done
+
+echo -ne $newFile>students.csv
+
+
+if [ $deleted = no ]
+then
+	echo user "$user" was not found!
+fi
