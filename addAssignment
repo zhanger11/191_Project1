@@ -1,0 +1,31 @@
+#!/bin/sh
+
+assignName=$1
+OLDIFS=$IFS
+IFS="
+"
+NEWLINE="\n"
+
+echo max score of assignment $1?
+read input
+
+newFile=
+
+lineNumber=1
+
+for line in $(cat students.csv)
+do
+	if [ $((lineNumber)) -eq 1 ] #first line, need to add assignment name
+	then
+		newFile=$newFile$line,$assignName$NEWLINE
+	elif [ $((lineNumber)) -eq 2 ] #2nd line, need to add assignment max score
+	then
+		newFile=$newFile$line,$input$NEWLINE
+	else 
+		newFile=$newFile$line$NEWLINE #user data, don't change, just append
+	fi 
+
+	lineNumber=$((lineNumber+1)) #increment lineNumber
+done
+
+echo -ne $newFile > students.csv
