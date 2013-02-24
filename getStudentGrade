@@ -1,0 +1,117 @@
+#!/bin/sh
+
+
+user=$1 #user
+
+OLDIFS=I=$IFS
+IFS="
+"
+notFound=NONE
+studentData=$notFound
+keyLine=
+pointLine=
+NEWLINE="\n"
+lineNumber=1
+
+#this loop just grabs the 2 lines that we want: the first line, and the line about the student
+for line in $(cat students.csv)
+do
+	IFS=,
+	
+	if [ $((lineNumber)) -eq 1 ] #get the keyLine
+	then
+		keyLine=$line
+	elif [ $((lineNumber)) -eq 2 ] #get max points
+	then
+		pointLine=$line	
+	else
+		for i in $line  #any other line, check the first word
+		do
+			if [ $i = $user ] #if this is the user I want
+			then
+				studentData=$line
+			fi
+			break #get out of this inner for loop, we are just in here to grab the entire line and thus only need to check the first word
+		done
+	fi
+	
+
+	IFS="
+	"
+	lineNumber=$((lineNumber+1))
+
+done
+
+if [ $studentData = $notFound ] #studen not found
+then
+	echo The student $user was not found!
+	exit
+fi
+
+IFS=,
+
+#stores the student's data in an array
+length=1
+for i in $studentData
+do
+	
+	studentArray[$((length))]=$i
+	length=$((length+1))
+done
+
+#stores the key data in an array
+length=1
+for i in $keyLine
+do
+	keyArray[$((length))]=$i
+	length=$((length+1))
+done
+
+#stores the point data in an array
+length=1
+for i in $pointLine
+do
+	pointArray[$((length))]=$i
+	length=$((length+1))
+done
+
+returnString=
+space=" "
+
+#form first line of the form FNAME LNAME [PENNKEY]
+returnString=${studentArray[3]}$space${studentArray[2]}$space"["${studentArray[1]}"]"$NEWLINE
+
+index=4
+#loop through to gather all the grades from arrays
+while [ $((index)) -lt $((length)) ]
+do
+	returnString=$returnString${keyArray[$((index))]}:${studentArray[$((index))]}/${pointArray[$((index))]}$NEWLINE
+	index=$((index+1))
+done
+
+#calculates the total possible scores and the total user score
+userTotal=0
+possibleTotal=0
+index=4
+while [ $((index)) -lt $((length)) ]
+do
+	tmp1=${studentArray[$((index))]}
+	tmp2=${pointArray[$((index))]}
+
+	userTotal=$(($((userTotal))+$((tmp1))))
+	possibleTotal=$(($((possibleTotal))+$((tmp2))))
+	index=$((index+1))
+done
+
+#echo $userTotal
+#echo $possibleTotal
+echo -e $returnString"TOTAL:"$userTotal/$possibleTotal
+
+
+#below shows how to iterate through array to get each element
+#index=1
+#while [ $((index)) -lt $((length)) ]
+#do
+#	echo ${studentArray[$((index))]}
+#	index=$((index+1))
+#done
