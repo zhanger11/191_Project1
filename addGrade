@@ -1,0 +1,108 @@
+#!/bin/sh
+
+user=$1
+assignment=$2
+assignmentPos=-1 #position of the assignment
+assignmentFound=-1
+
+userFound=-1
+
+OLDIFS=$IFS
+IFS="
+"
+
+NEWLINE="\n"
+
+lineNumber=1
+
+newFile=
+firstWord=
+
+echo score for user: $user for assignment $assignment?
+read input
+
+
+for line in $(cat students.csv) #go line by line
+do
+	firstWord=yes
+	IFS=,
+	index=0
+	userFound=-1
+	for i in $line #go word by word within each line
+	do
+		if [ $((lineNumber)) -eq 1 ] #first line
+		then
+			if [ $firstWord = yes ]
+			then
+				newFile=$newFile$i #if first word in a new line, don't add comma
+				firstWord=no
+			else newFile=$newFile,$i
+			fi
+	
+			if [ $((assignmentFound)) -eq -1 ] #while we haven't found the header yet, keep increasing the variable
+			then
+				assignmentPos=$((assignmentPos+1)) #increment position
+			fi
+			if [ $i = $assignment ] #if we found the assignment we want
+			then
+				assignmentFound=0
+			fi
+		elif [ $((lineNumber)) -eq 2 ]
+		then
+			if [ $firstWord = yes ]
+			then
+				newFile=$newFile$i #if first word in a new line, don't add comma
+				firstWord=no
+			else newFile=$newFile,$i
+			fi
+
+			#error message that the assignment was not found
+			if [ $((assignmentFound)) -eq -1 ]
+			then
+				echo the requested assignment $assignment was not found
+				exit
+			fi
+		
+		else #user data line
+			if [ $i = $user ]
+			then
+				userFound=0 #found the user
+			fi
+			
+			if [ $((userFound)) -eq 0 ] # if we are in the current row of the user we want to alter
+			then
+				if [ $((index)) -eq $((assignmentPos)) ] #if this is the grade we want to change
+				then
+					newFile=$newFile,$input #append input
+				else 
+					if [ $firstWord = yes ]
+					then
+						newFile=$newFile$i #if first word in a new line, don't add comma
+					firstWord=no
+					else newFile=$newFile,$i
+					fi
+
+				fi
+			else #for all other users we do not want to change
+				if [ $firstWord = yes ]
+				then
+					newFile=$newFile$i #if first word in a new line, don't add comma
+					firstWord=no
+				else newFile=$newFile,$i
+				fi
+
+			fi
+
+			index=$((index+1))
+		fi
+	done
+
+	IFS="
+	"
+	lineNumber=$((lineNumber+1)) #increment lineNumber
+	
+	newFile=$newFile$NEWLINE #add newline at the end of everyline (duh)
+
+done
+
+echo -ne $newFile > students.csv
