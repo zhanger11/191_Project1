@@ -5,6 +5,9 @@ zhangka: Kaiyu Zhang
 
 SCRIPTS__________
 addStudent: takes as input (pennkey, lastname, firstname) to add a new student to the csv. It will give the new student 0 for all assignments.
+
 rmStudent: takes as input a pennkey and removes the student from the csv file, if the student exists. Will need a confirmation from the user before it does that.
+
 addAssignment: takes as input the assignment name; it will then prompt you for maximum assignment points. Updates 2 first lines of the CSV files with the new assignment name and the new assignment max score respectively. For the rest of the students' data, add's a 0 temporarily for their scores.
+
 addGrade: takes as input pennkey and assignment name. It will then prompt you to enter the grade for that student's assignment. If the name of the assignment entered was bad, it will return a message about it. If the student was bad, no message will be returned but nothing will be changed. Otherwise, that student's assignment grade will be changed to the input value, regardless of the maximum score set.
