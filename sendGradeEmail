@@ -1,0 +1,14 @@
+#!/bin/sh
+
+pk=$1
+label=$2
+
+file="./${label}/${pk}_${label}_grade"
+
+if [ -f $file ] 
+then 
+    message=$(<$file)
+    echo "$message" | mailx -s "${label}: Grade" "${pk}@seas.upenn.edu"
+else
+    echo "${pk}'s grade file not found for ${label}"
+fi

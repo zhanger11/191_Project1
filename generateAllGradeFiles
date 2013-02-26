@@ -1,0 +1,14 @@
+#!/bin/sh
+
+label=$1
+
+mkdir $label 2> /dev/null
+pks=$(tail -n +3 students.csv | awk 'BEGIN {FS=","} {print $1}')
+
+for pk in $pks
+do
+    source ./generateGradeFile $pk $label
+    cp "${pk}_${label}_grade" "${label}"
+    rm "${pk}_${label}_grade"
+done
+

@@ -1,0 +1,59 @@
+#!/bin/sh
+
+pk=$1
+label="$2"
+
+keyLine=$(head -1 students.csv)
+pointLine=$(head -2 students.csv | tail -1) 
+IFS=,
+foundno=0
+colno=1
+grade=0
+maxgrade=0
+for col in $keyLine
+do
+    if [ "$col" = "$label" ]
+       then
+	foundno=$colno
+    fi
+colno=$((colno+1))
+done
+colno=1
+
+for col in $pointLine
+do
+    if [ $((foundno)) -eq $((colno)) ]
+      then
+	maxgrade=$((col))
+    fi
+    colno=$((colno+1))
+done
+
+if [ $((foundno)) -ne 0 ]
+then
+    studentInfo=$(grep $pk students.csv)
+    if [ $? -eq 1 ]
+	then
+	echo "Student not found"
+	fi
+    colnom=1
+    for i in $studentInfo
+    do
+	studInfo[colnom]="$i"
+	colnom=$((colnom+1))   
+ done
+
+file="${pk}_${label}_grade"
+
+line1="${studInfo[3]} ${studInfo[2]} (${studInfo[1]})"  
+line2=$label
+line3="Grade: ${studInfo[$((foundno))]}/$maxgrade"
+rm $file 2> /dev/null
+echo $line1 >> $file
+echo $line2 >> $file
+echo $line3 >> $file
+
+else
+echo "Assignment not found"
+fi
+

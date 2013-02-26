@@ -1,0 +1,9 @@
+#!/bin/sh
+
+label=$1
+pks=$(tail -n +3 students.csv | awk 'BEGIN {FS=","} {print $1}')
+
+for pk in $pks
+do
+    source ./sendGradeEmail $pk $label
+done

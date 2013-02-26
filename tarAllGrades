@@ -1,0 +1,22 @@
+#!/bin/sh
+
+semester=$1
+year=$2
+
+infoLine=$(head -1 students.csv)
+
+hwlabels=$(echo $infoLine | awk 'BEGIN {FS=","} {$1=$2=$3="";print$0}')
+dirpaths=""
+for hw in $hwlabels
+do
+    if [ -d "./${hw}" ]
+    then
+	dirpaths="${dirpaths} ./${hw}"
+    else
+	echo "Directory for assignment ${hw} not found"
+    fi
+done
+
+tar -zcvf "${year}_${semester}_backup.tar.gz" $dirpaths 
+    
+

@@ -1,0 +1,51 @@
+#!/bin/sh
+
+csvpath=$1 #path to CSV file
+
+if [ ! -f $csvpath ]
+then
+    echo "File not Found!"
+    exit 1
+fi 
+OLDIFS=I=$IFS
+IFS="
+"
+
+pointLine=$(head -2 $csvpath | tail -1)
+IFS=,
+sumposs=0
+colno=1
+for col in $pointLine
+do
+  if [ $((colno)) -gt 3 ]
+	then
+	sumposs=$((sumposs+col))
+    fi
+  colno=$((colno+1))
+done
+
+IFS="
+"
+
+for line in $(tail -n +3 $csvpath)
+do
+    sum=0
+    pk=
+    IFS=,
+    colno=1
+    for col in $line
+    do
+    if [ $((colno)) -eq 1 ]
+       then
+	pk=$col
+	fi
+    if [ $((colno)) -gt 3 ]
+    then
+	sum=$((sum+col))
+    fi
+    colno=$((colno+1))
+    done
+    echo "$pk: $sum/$sumposs"
+done
+
+
