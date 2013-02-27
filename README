@@ -13,3 +13,15 @@ addAssignment: takes as input the assignment name; it will then prompt you for m
 addGrade: takes as input pennkey and assignment name. It will then prompt you to enter the grade for that student's assignment. If the name of the assignment entered was bad, it will return a message about it. If the student was bad, no message will be returned but nothing will be changed. Otherwise, that student's assignment grade will be changed to the input value, regardless of the maximum score set.
 
 getStudentGrade: takes as input a student's pennkey. If the pennkey is invalid, the script will tell you so. Otherwise, it will print to standard out a generated neat form that informs of the student's grades
+
+getAllStudentGrades: takes as input the path to the students.csv and outputs a list of pennkeys and total points for that student / total points possible. If the students.csv file is not found using the given path the user is informed of this and the script exits
+
+generateGradeFile: 1st input: student's pennkey 2nd input: assignment label, generates text file named pennkey_assignmentlabel_grade where the two inputs are substituted in for pennkey and assignment label -- this text file is stored in the project's top level directory. If the student's pennkey or the assignment label is not found in students.csv, the user is informed of this. 
+
+generateAllGradeFiles: input: assignment label, this generates grade files for all students for the HW specified by assignment label and stores them in a directory named with the assignment label. This directory is in the project top level directory. If the assignment label is not found in students.csv, the user is informed of this via the output of the previous script.
+
+sendGradeEmail: 1st input: student's pennkey 2nd input: assignment label, sends student's grade file for the given assignment (with the text in the body of the email). This script assumes the grade file has already been created using previous scripts and is stored in a directory with the naming convention of the previous script (generateAllGradeFiles). If the grade file for this assignment and this student is not found in the directory (named as the assignment label), the user is informed of this.
+
+sendAllGradeEmails: input: assignment label, sends an email to each student containing the text of their grade file for this assignment. This script assumes the grade files have already been created and is stored in the directory with the naming convention of generateAllGradeFiles. If any grade files for any of the students aren't found, the user is informed of this.
+
+tarAllGrades: 1st input: semester (spring,fall, summer) 2nd input: year, YYYY... outputs a tar file named YYYY_semester_backup.tar.gz.. This tar file includes all the grade files in the directories created by generateAllGradeFiles. It finds the directories using the assignments listed in students.csv. If a grade file directory doesn't exist for a certain assignment, the user is informed of this. 
