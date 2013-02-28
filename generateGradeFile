@@ -35,6 +35,7 @@ then
     if [ $? -eq 1 ]
 	then
 	echo "Student not found"
+	exit
 	fi
     colnom=1
     for i in $studentInfo

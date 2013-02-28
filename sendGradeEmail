@@ -11,7 +11,7 @@ then
     message=$(<$file)
     echo "$message" | mailx -s "${label}: Grade" "${pk}@seas.upenn.edu"
 else
-    if [ -f $file2 }
+    if [ -f $file2 ]
     then
 	message=$(<$file2)
 	echo "$message" | mailx -s "${label}: Grade" "${pk}@seas.upenn.edu"
